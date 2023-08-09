@@ -1,0 +1,58 @@
+:root {
+  --light_green: #ecffed;
+  --green: #4caf50;
+  --light_blue: #e9f0ff;
+  --blue: #0842c2;
+  --site_background: var(--light_blue);
+  --background: var(--blue);
+  --border: var(--blue);
+}
+
+.container {
+  padding-top: 70px;
+  margin:auto;
+  width: fit-content;
+}
+
+body {
+  background: var(--site_background);
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+input[type=submit] {
+  background-color: var(--background);
+  border: 2px solid var(--border);
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  display: inline-block;
+  font-size: 16px;
+  width: 6em;
+}
+
+input[type=submit]:hover {
+  background-color: white;
+  color: black;
+  display: inline-block;
+}
+
+input[type=text] {
+  background-color: white;
+  border: 2px solid var(--border);
+  color: black;
+  font-size: 16px;
+  text-align: left;
+  padding: 15px 32px;
+  display: inline-block;
+}
+
+#question {
+  border-right:none;
+  width: 30em;
+  margin-bottom: 20px;
+}
+
+#answer {
+  width: 36em;
+}
