@@ -8,6 +8,12 @@
   --border: var(--blue);
 }
 
+h1 {
+  padding-top: 50px;
+  color: var(--border);
+  text-align: center;
+}
+
 .container {
   padding-top: 70px;
   margin:auto;
