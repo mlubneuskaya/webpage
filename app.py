@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 
-model_name = 'google/flan-t5-large'
+model_name = 'google/flan-t5-small'
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 tokenizer = T5Tokenizer.from_pretrained(model_name)
 
@@ -32,4 +32,4 @@ def get_answer(phrase):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port=5000)
