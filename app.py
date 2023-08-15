@@ -1,12 +1,26 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from transformers import T5Tokenizer, T5ForConditionalGeneration
+from flask_swagger_ui import get_swaggerui_blueprint
+import json
+
+
+app = Flask(__name__, template_folder='templates', static_folder='static')
+
+SWAGGER_URL = '/swagger'
+API_URL = '/static/swagger.json'
+swaggerui_blueprint = get_swaggerui_blueprint(
+    SWAGGER_URL,
+    API_URL,
+    config={
+        'app_name': "Sample API"
+    }
+)
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
 
 model_name = 'google/flan-t5-small'
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 tokenizer = T5Tokenizer.from_pretrained(model_name)
-
-app = Flask(__name__, template_folder='templates', static_folder='static')
 
 
 @app.route('/', methods=['GET'])
@@ -19,6 +33,7 @@ def index():
             phrase = ''
             return render_template('index.html', answer=translation, question=phrase)
         translation = get_answer(phrase)
+    print(render_template('index.html', answer=translation, question=phrase))
     return render_template('index.html', answer=translation, question=phrase)
 
 

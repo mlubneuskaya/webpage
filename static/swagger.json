@@ -1,0 +1,39 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "translator",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "requestBody": {
+          "content": {
+            "text/html": {
+              "schema": {}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Phrase": {
+        "type": "string"
+      }
+    }
+  }
+}
