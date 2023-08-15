@@ -4,21 +4,28 @@
     "title": "translator",
     "version": "1.0.0"
   },
+  "servers": [
+    {
+      "url": "http://localhost:5000/",
+      "description": "dev server"
+    }
+  ],
   "paths": {
     "/": {
       "get": {
-        "requestBody": {
-          "content": {
-            "text/html": {
-              "schema": {}
-            }
-          }
-        },
+        "parameters": [
+          {"in": "query",
+          "name":  "question",
+          "schema": {
+            "type": "string"
+          },
+          "description": "phrase to be translated"}
+        ],
         "responses": {
           "200": {
             "description": "success",
             "content": {
-              "text/html": {
+              "application/json": {
                 "schema": {
                   "type": "string"
                 }
@@ -26,13 +33,6 @@
             }
           }
         }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Phrase": {
-        "type": "string"
       }
     }
   }

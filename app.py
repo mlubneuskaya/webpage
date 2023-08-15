@@ -31,10 +31,9 @@ def index():
         phrase = request.args.get("question")
         if phrase is None:
             phrase = ''
-            return render_template('index.html', answer=translation, question=phrase)
+            return render_template('index.html', translation=translation, phrase=phrase)
         translation = get_answer(phrase)
-    print(render_template('index.html', answer=translation, question=phrase))
-    return render_template('index.html', answer=translation, question=phrase)
+    return render_template('index.html', translation=translation, phrase=phrase)
 
 
 def get_answer(phrase):
