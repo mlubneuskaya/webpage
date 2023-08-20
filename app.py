@@ -1,8 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, abort
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 from flask_swagger_ui import get_swaggerui_blueprint
-import json
-
+import psycopg2
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -26,18 +25,35 @@ tokenizer = T5Tokenizer.from_pretrained(model_name)
 @app.route('/', methods=['GET'])
 def index():
     translation = ''
-    phrase = ''
-    if request.method == 'GET':
-        phrase = request.args.get("question")
-        if phrase is None:
-            phrase = ''
-            return render_template('index.html', translation=translation, phrase=phrase)
+    phrase = request.args.get("phrase")
+    if phrase is not None:
         translation = get_answer(phrase)
-    return render_template('index.html', translation=translation, phrase=phrase)
+    else:
+        phrase = ''
+    return render_template('index.html', translation=translation, phrase=phrase, language=language.upper())
+
+
+host = '127.0.0.1'
+conn = psycopg2.connect(database='settings', host=host, user='postgres', password='password', port=5432)
+cursor = conn.cursor()
+
+cursor.execute('SELECT default_language FROM default_settings')
+language = cursor.fetchall()[0][0]
+
+
+@app.route('/settings/', methods=['POST'])
+def update_default_language():
+    data = request.json
+    if data not in ["German", "French", "Romanian"]:
+        abort(400)
+    command = "UPDATE default_settings SET default_language = '{}'".format(data)
+    cursor.execute(command)
+    conn.commit()
+    return 'Default language updated to {}'.format(data)
 
 
 def get_answer(phrase):
-    input_phrase = 'Translate English to German: ' + phrase
+    input_phrase = 'Translate English to {}: {}'.format(language, phrase)
     input_ids = tokenizer(input_phrase, return_tensors='pt').input_ids
     max_tokens = len(phrase) * 1.5
     outputs = model.generate(input_ids, max_new_tokens=max_tokens)
@@ -46,4 +62,7 @@ def get_answer(phrase):
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host='localhost', port=8000)
+
+cursor.close()
+conn.close()

@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5000/",
+      "url": "http://localhost:8000/",
       "description": "dev server"
     }
   ],
@@ -14,12 +14,14 @@
     "/": {
       "get": {
         "parameters": [
-          {"in": "query",
-          "name":  "question",
-          "schema": {
-            "type": "string"
-          },
-          "description": "phrase to be translated"}
+          {
+            "in": "query",
+            "name": "question",
+            "schema": {
+              "type": "string"
+            },
+            "description": "phrase to be translated"
+          }
         ],
         "responses": {
           "200": {
@@ -31,6 +33,31 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/settings": {
+      "post": {
+        "summary": "Updates default language",
+        "requestBody": {
+          "description": "Supported languages: German, French, Romanian",
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": "German",
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Language not supported"
           }
         }
       }
