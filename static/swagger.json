@@ -58,6 +58,9 @@
           },
           "400": {
             "description": "Language not supported"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

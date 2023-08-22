@@ -16,7 +16,6 @@ swaggerui_blueprint = get_swaggerui_blueprint(
 )
 app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
 
-
 model_name = 'google/flan-t5-small'
 model = T5ForConditionalGeneration.from_pretrained(model_name)
 tokenizer = T5Tokenizer.from_pretrained(model_name)
@@ -34,8 +33,13 @@ def index():
 
 
 host = '127.0.0.1'
-conn = psycopg2.connect(database='settings', host=host, user='postgres', password='password', port=5432)
-cursor = conn.cursor()
+try:
+    conn = psycopg2.connect(database='settings', host=host, user='postgres', password='password', port=5432)
+    cursor = conn.cursor()
+except Exception:
+    print('Cannot connect to database')
+    quit()
+
 
 cursor.execute('SELECT default_language FROM default_settings')
 language = cursor.fetchall()[0][0]
@@ -43,13 +47,16 @@ language = cursor.fetchall()[0][0]
 
 @app.route('/settings/', methods=['POST'])
 def update_default_language():
-    data = request.json
-    if data not in ["German", "French", "Romanian"]:
+    new_language = request.json.lower()
+    if new_language not in ["german", "french", "romanian"]:
         abort(400)
-    command = "UPDATE default_settings SET default_language = '{}'".format(data)
-    cursor.execute(command)
+    command = "UPDATE default_settings SET default_language = '{}'".format(new_language)
+    try:
+        cursor.execute(command)
+    except Exception:
+        abort(500)
     conn.commit()
-    return 'Default language updated to {}'.format(data)
+    return 'Default language updated to {}'.format(new_language)
 
 
 def get_answer(phrase):
